@@ -6,16 +6,16 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 app.engine('html', ejs.renderFile);
-app.use(express.static('/index'));
+// app.use(express.static('/server'));
 
 const PORT = process.env.PORT || 5050;
 const server = http.createServer(app).listen(PORT)
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/server/index.html');
 });
 
-app.get('/health', function(req, res){
-  res.sendStatus(200);
+app.post('/requests', (req, res) => {
+  res.sendFile(__dirname + '/server/vform.html');
 });
 
