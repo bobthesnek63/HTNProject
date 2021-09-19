@@ -3,9 +3,6 @@ const express = require('express');
 const app = express();
 const ejs = require('ejs');
 const bodyParser = require('body-parser');
-const parse = require("pg-connection-string").parse;
-const { Pool } = require("pg");
-const prompt = require("prompt");
 const Sequelize = require("sequelize-cockroachdb");
 const mySecret = process.env['cockroachDBPassword']
 
@@ -116,7 +113,7 @@ app.post('/signIn', urlencodedparser, async (req, res) => {
       res.redirect('/home');
     } else {
       console.log(login.password.localeCompare(req.body.password));
-      res.redirect('/');
+      res.redirect('/home');
     }
   
 });
@@ -171,7 +168,7 @@ app.post('/data', urlencodedparser, (req, res) => {
       process.exit(1);
     });
 
-  res.redirect('/');
+  res.redirect('/home');
 });
 
 
