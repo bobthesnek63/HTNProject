@@ -12,21 +12,33 @@
       <div class="collapse navbar-collapse">
         <a class="nav-item nav-link" href="/">Home</a>
         <a class="nav-item nav-link" href="">Browse Requests</a>
-        <a class="nav-item nav-link" href="/postRequest">Post a Request</a>
-      </div>
-
-      <div class="collapse navbar-collapse me-auto">
-        <a class="nav-item nav-link" href="#">Home</a>
+        <a class="nav-item nav-link" href="/postRequests">Post a Request</a>
       </div>
     </nav>
 
-    <form action="/data" method="POST">
-      <label for="id">ID: </label>
-      <input type="text" name="id" value="">
-      <label for="balance">Balance: </label>
-      <input type="text" name="balance" value="">
-      <input type="submit">
-    </form>
+    <div class="row text-center justify-content-center mt-4">
+      <% for (var i = 0; i < tasks.length; i++){ %>
+        <div class="card col-3 mx-4 my-3">
+          <div class="card-header bg-warning">
+            <h3><strong><%- tasks[i].title %></strong></h3>
+            <h6 class="badge bg-primary"><%- tasks[i].tag %></h6>
+          </div>
+
+          <div class="card-body">
+            <h5>Description: <%- tasks[i].description %></h5>
+            <br>
+            <h5>Requester: <%- tasks[i].requester %></h5>
+            <br>
+            <h5>Estimated Time: <%- tasks[i].hours %> h </h5>
+          </div>
+
+          <div class="card-footer text-center bg-warning">
+            <button class="btn btn-success">Accept</button>
+          </div>
+        </div>
+      <% } %>
+    </div>
+    
 
   </body>
 </html>

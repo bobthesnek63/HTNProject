@@ -12,12 +12,10 @@
     <div class="collapse navbar-collapse">
       <a class="nav-item nav-link" href="/">Home</a>
       <a class="nav-item nav-link" href="/browseRequests">Browse Requests</a>
-      <a class="nav-item nav-link" href="/postRequest">Post a Request</a>
+      <a class="nav-item nav-link" href="/postRequests">Post a Request</a>
+      
     </div>
 
-    <div class="collapse navbar-collapse me-auto">
-      <a class="nav-item nav-link" href="#">Home</a>
-    </div>
   </nav>
 
   <div class="container-fluid row m-2 mt-4">
@@ -50,6 +48,10 @@
     <br>
     <form action="/browseRequests" method="GET" class="text-center">
       <input type="submit" class="btn btn-success" value="Browse Requests">
+    </form>
+
+    <form action="/postRequests" method="GET" class="text-center">
+      <input type="submit" class="btn btn-success" value="Create a Request">
     </form>
   </div>
   

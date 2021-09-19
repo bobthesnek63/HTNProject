@@ -3,17 +3,17 @@ const express = require('express');
 const app = express();
 const ejs = require('ejs');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const parse = require("pg-connection-string").parse;
 const { Pool } = require("pg");
 const prompt = require("prompt");
 const Sequelize = require("sequelize-cockroachdb");
+const mySecret = process.env['cockroachDBPassword']
 
 // Connect to CockroachDB through Sequelize.
 var sequelize = new Sequelize({
   dialect: "postgres",
   username: "bobthesnek63",
-  password: "HacktheNorthTest",
+  password: mySecret,
   host: "free-tier.gcp-us-central1.cockroachlabs.cloud",
   port: 26257,
   database: "witty-jackal-3642.defaultdb",
@@ -29,14 +29,23 @@ var sequelize = new Sequelize({
 });
 
   // Define the Account model for the "accounts" table.
-const Account = sequelize.define("accounts", {
-  id: {
-    type: Sequelize.INTEGER,
+const Tasks = sequelize.define("tasks", {
+  title: {
+    type: Sequelize.STRING,
     primaryKey: true,
   },
-  balance: {
-    type: Sequelize.INTEGER,
+  tag: {
+    type: Sequelize.STRING,
   },
+  description: {
+    type: Sequelize.STRING,
+  },
+  requester: {
+    type: Sequelize.STRING,
+  },
+  hours: {
+    type: Sequelize.INTEGER,
+  }
 });
 
 app.engine('html', ejs.renderFile);
@@ -51,32 +60,57 @@ app.get('/', (req, res) => {
 });
 
 app.get('/browseRequests', (req, res) => {
-  res.sendFile(__dirname + '/server/browseRequests.html');
+  var tasksArr = [];
+
+  Tasks.sync({
+    force: false,
+  }).then(function (){
+    return Tasks.findAll();
+  }).then(function (tasks){
+    tasks.forEach(function (task){
+      var taskJson = {
+        title: task.title,
+        tag: task.tag,
+        description: task.description,
+        requester: task.requester,
+        hours: task.hours
+      }
+      
+      tasksArr.push(taskJson);
+    })
+  }).then(function (){
+      console.log(tasksArr[0])
+      res.render(__dirname + '/server/browseRequests.html', {tasks: tasksArr});
+    })
+  
 });
 
-app.post('/postRequest', (req, res) => {
-  res.sendFile(__dirname + '/server/postRequest.html');
+app.get('/postRequests', (req, res) => {
+  res.sendFile(__dirname + '/server/postRequests.html');
 });
 
 app.post('/data', urlencodedparser, (req, res) => {
-  // Create the "accounts" table.
-  Account.sync({
+  // Create the "tasks" table.
+  Tasks.sync({
     force: false,
   })
   .then(function (){
-    Account.bulkCreate([
-      {id: req.body.id,
-      balance: req.body.balance}
+    Tasks.bulkCreate([
+      {title: req.body.title,
+      tag: req.body.tag,
+      description: req.body.desc,
+      requester: req.body.requ,
+      hours: req.body.hours}
     ])
   })
     .then(function () {
       // Retrieve accounts.
-      return Account.findAll();
+      return Tasks.findAll();
     })
-    .then(function (accounts) {
+    .then(function (tasks) {
       // Print out the balances.
-      accounts.forEach(function (account) {
-        console.log(account.id + " " + account.balance);
+      tasks.forEach(function (task) {
+        console.log(task.title + " " + task.tag + " " + task.description + " " + task.requester + " " + task.hours);
       });
     })
     .catch(function (err) {
@@ -86,3 +120,7 @@ app.post('/data', urlencodedparser, (req, res) => {
 
   res.redirect('/');
 });
+
+
+
+
