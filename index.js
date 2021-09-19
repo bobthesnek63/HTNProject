@@ -48,6 +48,16 @@ const Tasks = sequelize.define("tasks", {
   }
 });
 
+const LogIns = sequelize.define("logins", {
+  username: {
+    type: Sequelize.STRING,
+    primaryKey: true
+  },
+  password: {
+    type: Sequelize.STRING,
+  }
+});
+
 app.engine('html', ejs.renderFile);
 // app.use(express.static('/server'));
 var urlencodedparser = bodyParser.urlencoded({extended:false});
@@ -56,6 +66,11 @@ const PORT = process.env.PORT || 5050;
 const server = http.createServer(app).listen(PORT)
 
 app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/server/signUp.html');
+});
+
+
+app.get('/home', (req, res) => {
   res.sendFile(__dirname + '/server/index.html');
 });
 
@@ -88,6 +103,44 @@ app.get('/browseRequests', (req, res) => {
 app.get('/postRequests', (req, res) => {
   res.sendFile(__dirname + '/server/postRequests.html');
 });
+
+app.get('/signIn', (req, res) => {
+  res.sendFile(__dirname + '/server/signIn.html')
+});
+
+app.post('/signIn', urlencodedparser, async (req, res) => {
+  var login = await LogIns.findOne({where: {username: req.body.username}});
+
+  
+  if ((login.password.localeCompare(req.body.password)) == 0){
+      res.redirect('/home');
+    } else {
+      console.log(login.password.localeCompare(req.body.password));
+      res.redirect('/');
+    }
+  
+});
+
+app.get('/signUp', function(req, res){
+  res.sendFile(__dirname + '/server/signUp.html')
+});
+
+app.post('/signUp', urlencodedparser, (req, res) => {
+
+
+  LogIns.sync({
+    force: false,
+  }).then(function (){
+    LogIns.bulkCreate([
+      {username: req.body.username,
+      password: req.body.password}
+    ])
+  });
+
+  res.redirect('/signIn');
+});
+
+
 
 app.post('/data', urlencodedparser, (req, res) => {
   // Create the "tasks" table.
