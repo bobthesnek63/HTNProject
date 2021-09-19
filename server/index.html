@@ -10,9 +10,9 @@
   <nav class="mx-3 float-left navbar navbar-expand-lg navbar-light">
     <a class="navbar-brand" href="">Volunteer Connect</a>
     <div class="collapse navbar-collapse">
-      <a class="nav-item nav-link" href="#">Home</a>
-      <a class="nav-item nav-link" href="#">Browse Requests</a>
-      <a class="nav-item nav-link" href="#">Post a Request</a>
+      <a class="nav-item nav-link" href="/">Home</a>
+      <a class="nav-item nav-link" href="/browseRequests">Browse Requests</a>
+      <a class="nav-item nav-link" href="/postRequest">Post a Request</a>
     </div>
 
     <div class="collapse navbar-collapse me-auto">
@@ -48,7 +48,7 @@
   <div class="container-fluid mt-3 bg-dark p-3">
     <h2 class="text-light text-center">Get started on helping others!</h2>
     <br>
-    <form action="/requests" method="POST" class="text-center">
+    <form action="/browseRequests" method="GET" class="text-center">
       <input type="submit" class="btn btn-success" value="Browse Requests">
     </form>
   </div>
